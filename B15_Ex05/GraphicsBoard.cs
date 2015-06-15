@@ -8,13 +8,16 @@ namespace B15_Ex05
 {
     public class GraphicsBoard : Form 
     {
-        private int m_boardSize;
-        private bool m_multiplayer;
+        private int m_BoardSize;
+        private bool m_Multiplayer;
+        private int m_ButtonSize = 35;
+        private Button[,] m_gameMatrix;
 
         public GraphicsBoard(int i_boardSize, bool i_multiplayer)
         {
-            m_boardSize = i_boardSize;
-            m_multiplayer = i_multiplayer;
+            m_BoardSize = i_boardSize;
+            m_Multiplayer = i_multiplayer;
+            m_gameMatrix = 
         }
 
         private void InitializeComponent()
@@ -32,7 +35,7 @@ namespace B15_Ex05
 
         private void GraphicsBoard_Load(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

@@ -63,7 +63,8 @@ namespace B15_Ex05
         private void m_ButtonAgainstComputer_Click(object sender, EventArgs e)
         {
             //TODD - call the graphic board
-            throw new NotImplementedException();
+            GraphicsBoard board = new GraphicsBoard(6, false);
+            board.ShowDialog();
         }
 
         private void m_ButtonAgainstPlayer_Click(object sender, EventArgs e)
@@ -99,7 +100,22 @@ namespace B15_Ex05
             
         }
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // GameSettings
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "GameSettings";
+            this.Load += new System.EventHandler(this.GameSettings_Load);
+            this.ResumeLayout(false);
 
-        
+        }
+
+        private void GameSettings_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

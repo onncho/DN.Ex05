@@ -67,7 +67,7 @@ namespace B15_Ex05
         public void runGame()
         {
             bool firstPlayer = true; // If not first player then second player turn
-            this.m_gameBoard.printBoard(this.getMatrix());
+            this.m_gameBoard.printBoard(this.getMatrix());// @TODO: this method prints to console
 
             while (true)
             {

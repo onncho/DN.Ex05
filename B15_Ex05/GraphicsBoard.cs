@@ -27,15 +27,18 @@ namespace B15_Ex05
                 for (int j = 0; j < m_BoardSize; j++)
                 {
                     m_gameMatrix[i, j] = new Button();
-                    m_gameMatrix[i, j].Size = new Size(new Point( 35 ,   35 ));
-                    m_gameMatrix[i, j].Location = new Point(35 * j , 35 * i );
+                    m_gameMatrix[i, j].Size = new Size(new Point( 50 ,   50 ));
+                    m_gameMatrix[i, j].Location = new Point(50 * j , 50 * i );
                     m_gameMatrix[i, j].Text = "(" + j + ", " + i + ")";
-                    
+                    m_gameMatrix[i, j].Tag = new int[2] { i, j };
+                    m_gameMatrix[i, j].Click += new EventHandler(doSome);
                     m_GameControls[m_LastFilledIndex] = m_gameMatrix[i, j];
                     m_LastFilledIndex++;
                 }
             }
             this.Controls.AddRange(m_GameControls);
+            InitializeComponent();
+            
 
         }
 
@@ -46,7 +49,8 @@ namespace B15_Ex05
             // 
             // GraphicsBoard
             // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
+
+            this.ClientSize = new System.Drawing.Size(m_BoardSize * 50, m_BoardSize * 50);
             this.Name = "GraphicsBoard";
             this.Load += new System.EventHandler(this.GraphicsBoard_Load);
             
@@ -56,6 +60,16 @@ namespace B15_Ex05
 
             
 
+        }
+
+        private void doSome(object sender, EventArgs e)
+        {
+            if(sender is Button)
+            {
+                Button button = sender as Button;
+                int[] tuple = button.Tag as int[];
+            }
+            
         }
 
         private void GraphicsBoard_Load(object sender, EventArgs e)

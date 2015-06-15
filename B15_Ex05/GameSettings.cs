@@ -63,7 +63,7 @@ namespace B15_Ex05
         private void m_ButtonAgainstComputer_Click(object sender, EventArgs e)
         {
             //TODD - call the graphic board
-            GraphicsBoard board = new GraphicsBoard(6, false);
+            GraphicsBoard board = new GraphicsBoard(m_BoardSizeIndex, false);
             board.ShowDialog();
         }
 

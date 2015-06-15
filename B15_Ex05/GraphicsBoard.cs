@@ -30,6 +30,7 @@ namespace B15_Ex05
                     m_gameMatrix[i, j].Size = new Size(new Point( 35 ,   35 ));
                     m_gameMatrix[i, j].Location = new Point(35 * j , 35 * i );
                     m_gameMatrix[i, j].Text = "(" + j + ", " + i + ")";
+                    
                     m_GameControls[m_LastFilledIndex] = m_gameMatrix[i, j];
                     m_LastFilledIndex++;
                 }

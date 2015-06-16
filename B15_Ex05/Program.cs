@@ -14,6 +14,12 @@ namespace B15_Ex05
             GameSettings myform = new GameSettings(); 
             myform.ShowDialog();
 
+
+            //subscriber
+            GameController gc = new GameController(false);
+            //register and pass the referance to the method
+
+
         }
     }
 }

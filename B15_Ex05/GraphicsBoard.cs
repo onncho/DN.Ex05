@@ -8,6 +8,9 @@ namespace B15_Ex05
 {
     public class GraphicsBoard : Form 
     {
+        //define event for user input by clicking a button
+        public event EventHandler UserClickedButtonEventHandler;
+
         private int m_BoardSize;
         private bool m_Multiplayer;
         private int m_ButtonSize = 35;
@@ -42,6 +45,15 @@ namespace B15_Ex05
 
         }
 
+        // publish event when user pressed a button
+        protected virtual void OnUserClickedButtonEventHandler(int[] i_ButtonIndex) {
+            if (UserClickedButtonEventHandler != null) {
+                UserClickedButtonEventHandler(i_ButtonIndex, EventArgs.Empty);
+            }
+        }
+
+
+
         private void InitializeComponent()
         {
             
@@ -68,6 +80,7 @@ namespace B15_Ex05
             {
                 Button button = sender as Button;
                 int[] tuple = button.Tag as int[];
+                OnUserClickedButtonEventHandler(tuple);
             }
             
         }

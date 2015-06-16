@@ -4,8 +4,17 @@ using System.Text;
 
 namespace B15_Ex05
 {
+
     class GameController
     {
+        public event EventHandler EmptyCellesChangeEventHandler;
+
+        // What we need to pass : 
+        // 1. updated matrix
+        // 2. who's turn
+        // 3. possible moves (green)
+        // 4. end game
+
         private int m_boardSize;
         private int[,] m_gameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
         private List<int[]> m_emptyCellsCollection;
@@ -14,16 +23,18 @@ namespace B15_Ex05
 
         public GameController(bool i_toSetMaxSize)
         {
-            this.m_boardSize = i_toSetMaxSize ? 8 : 6;
+            this.m_boardSize = i_toSetMaxSize ? 8 : 6; //@TODO: need to support more sizes
             this.m_gameMatrix = new int[m_boardSize, m_boardSize]; // initiliaze it automaticaly as 0 - none player
             int centeredChips = 0, centeredChipsMinusOne = 0;
 
             m_emptyCellsCollection = new List<int[]>();
-            this.m_gameBoard = new Board(i_toSetMaxSize);
+
+            this.m_gameBoard = new Board(i_toSetMaxSize); // create console board
 
             centeredChips = (m_boardSize / 2);
             centeredChipsMinusOne = centeredChips - 1;
 
+            //initiate all matrix cells with 0;
             for (int i = 0; i < m_boardSize; i++)
             {
                 for (int j = 0; j < m_boardSize; j++)
@@ -45,6 +56,13 @@ namespace B15_Ex05
             m_gameMatrix[centeredChips, centeredChipsMinusOne] = 1;
         }
 
+        // publish every time when the empty cells will be change
+        protected virtual void OnEmptyCellesChangeEventHandler(){
+            if (EmptyCellesChangeEventHandler != null) {
+                EmptyCellesChangeEventHandler(this,EventArgs.Empty);
+            }
+        }
+
         public int[,] getMatrix()
         {
             return m_gameMatrix;
@@ -54,6 +72,8 @@ namespace B15_Ex05
         {
             this.m_playerOne = new Player(i_playerOne.getPlayerIdentifier(), i_playerOne.getPlayerName(), false);
 
+
+            // place agaist pc or agaist friend 
             if (i_isSingle)
             {
                 this.m_playerTwo = new Player(i_playerTwo.getPlayerIdentifier(), i_playerTwo.getPlayerName(), true);
@@ -84,7 +104,9 @@ namespace B15_Ex05
                 }
                 else if (firstPlayer)
                 {
+                    // @TODO: cancel the matrix print 
                     GameIO.printNextPlayerTurn(m_playerOne.getPlayerIdentifier());
+
                     if (playerMoveFlow(m_playerOne, isThereAnyMoveToPlayerOne))
                     {
                         firstPlayer = !firstPlayer;
@@ -97,8 +119,10 @@ namespace B15_Ex05
                 }
                 else
                 {
+                    // @TODO: cancel the matrix print
                     if (!m_playerTwo.isPlayerPC())
                     {
+                        
                         GameIO.printNextPlayerTurn(m_playerTwo.getPlayerIdentifier());
 
                         if (playerMoveFlow(m_playerTwo, isThereAnyMoveToPlayerTwo))
@@ -114,6 +138,7 @@ namespace B15_Ex05
                     }
                     else if (m_playerTwo.isPlayerPC())
                     {
+                        // @TODO: cancel the matrix print
                         Console.WriteLine("PC turn");
                         List<int[]> validPoints = isThereAnyMovesLeftList(m_playerTwo.getPlayerIdentifier());
                         int[] pointToInsertTo = getRandomPointForPC(validPoints);
@@ -204,6 +229,8 @@ namespace B15_Ex05
             }
             winner = playerOnePoints >= playerTwoPoints ? true : false;
 
+
+            // @TODO: cancel the matrix print
             if (winner)
             {
                 GameIO.printCustomMessage("Player one Won!!");
@@ -216,6 +243,13 @@ namespace B15_Ex05
             Console.WriteLine("Exit");
         }
 
+        public void OnUserClickedButtonEventHandler(object source, EventArgs args) {
+            int[] buttonIndex = source as int[];
+            Console.WriteLine(buttonIndex[0].ToString() + "," + buttonIndex[1].ToString());
+            Console.WriteLine("entered");
+        }
+
+
         public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer)
         {
             bool validStepByPlayer = false;
@@ -225,13 +259,14 @@ namespace B15_Ex05
 
             if (i_isThereAnyMovesToPlayer)
             {
+                // @ TODO: change to function that gets input from click
                 playerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
-
                 collectionOfDirections = guessMoves(playerWantedMove[0], playerWantedMove[1], i_player.getPlayerIdentifier());
                 validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, playerWantedMove);
             }
             else
             {
+                // @TODO - check how to display for player
                 GameIO.printCustomMessage("Sorry seems like Player has no moves he can do");
             }
 
@@ -429,6 +464,8 @@ namespace B15_Ex05
             return cellSatify;
         }
 
+
+        // @TODO: brings back event that we need to update the board
         public void flipChips(int i_iStart, int i_jStart, int i_iDirection, int i_jDirection, int i_playerIdentifier)
         {
             int currentRowIndex = i_iStart,

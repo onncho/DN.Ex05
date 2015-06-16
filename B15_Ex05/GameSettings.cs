@@ -6,8 +6,14 @@ using System.Drawing;
 
 namespace B15_Ex05
 {
+
+    
+
     class GameSettings : Form
     {
+        // Define Delegate to raise events
+        //public event EventHandler BoardSizeEventHandler BoardSizeChosen;
+        
         Button m_ButtonBoardSize = new Button();
         Button m_ButtonAgainstComputer = new Button();
         Button m_ButtonAgainstPlayer = new Button();
@@ -60,11 +66,24 @@ namespace B15_Ex05
 
         }
 
+        //protected virtual void OnBoardSizeChosen()
+        //{
+        //    if (BoardSizeChosen != null)
+        //    {
+        //        BoardSizeChosen(this, EventArgs.Empty);
+        //    }
+        //} 
+
         private void m_ButtonAgainstComputer_Click(object sender, EventArgs e)
         {
+            GameController gc = new GameController(false);
+           
             //TODD - call the graphic board
             GraphicsBoard board = new GraphicsBoard(m_BoardSizeIndex, false);
+            board.UserClickedButtonEventHandler += gc.OnUserClickedButtonEventHandler;
+
             board.ShowDialog();
+
         }
 
         private void m_ButtonAgainstPlayer_Click(object sender, EventArgs e)

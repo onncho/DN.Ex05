@@ -85,6 +85,11 @@ namespace B15_Ex05
             
         }
 
+        public void addEvent(int buttonIndexI, int buttonIndexJ)
+        {
+            
+        }
+
         private void GraphicsBoard_Load(object sender, EventArgs e)
         {
             

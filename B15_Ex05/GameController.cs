@@ -250,19 +250,19 @@ namespace B15_Ex05
         }
 
 
-        public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer)
+        public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer, int[] i_playerWantedMove)
         {
             bool validStepByPlayer = false;
 
             List<int[]> collectionOfDirections;
-            int[] playerWantedMove;
+            ///int[] i_playerWantedMove;
 
             if (i_isThereAnyMovesToPlayer)
             {
                 // @ TODO: change to function that gets input from click
-                playerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
-                collectionOfDirections = guessMoves(playerWantedMove[0], playerWantedMove[1], i_player.getPlayerIdentifier());
-                validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, playerWantedMove);
+                //i_playerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
+                collectionOfDirections = guessMoves(i_playerWantedMove[0], i_playerWantedMove[1], i_player.getPlayerIdentifier());
+                validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, i_playerWantedMove);
             }
             else
             {

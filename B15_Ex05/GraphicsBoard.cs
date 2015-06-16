@@ -34,7 +34,7 @@ namespace B15_Ex05
                     m_gameMatrix[i, j].Location = new Point(50 * j , 50 * i );
                     m_gameMatrix[i, j].Text = "(" + j + ", " + i + ")";
                     m_gameMatrix[i, j].Tag = new int[2] { i, j };
-                    m_gameMatrix[i, j].Click += new EventHandler(doSome);
+                    //m_gameMatrix[i, j].Click += new EventHandler(doSome);
                     m_GameControls[m_LastFilledIndex] = m_gameMatrix[i, j];
                     m_LastFilledIndex++;
                 }

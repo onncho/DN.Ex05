@@ -268,6 +268,13 @@ namespace B15_Ex05
         //    m_PlayerWantedMove = buttonIndex;
         //}
 
+        // get the input form user to next move
+        public int[] OnPulishCorrectUserInputFromGraphicBoard(object source){
+            
+            int[] buttonIndex = source as int[];
+
+            return buttonIndex;
+        }
 
         public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer, int[] i_playerWantedMove)
         {
@@ -275,10 +282,15 @@ namespace B15_Ex05
             List<int[]> legalMoves = isThereAnyMovesLeftList(m_playerOne.getPlayerIdentifier());
             OnPublishLegalMovesAndAddListener(legalMoves);
             
+            bool validStepByPlayer = false;
+
+            int[] 
 
 
             Console.WriteLine(i_playerWantedMove[0].ToString() + "," + i_playerWantedMove[1].ToString());
-            bool validStepByPlayer = false;
+
+
+
 
             List<int[]> collectionOfDirections;
             ///int[] i_playerWantedMove;

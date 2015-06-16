@@ -7,6 +7,10 @@ namespace B15_Ex05
 {
     class GameFlow
     {
+
+        // create event for publish wanted move
+        public event EventHandler PulishCorrectUserInputFromGraphicBoard;
+
         private GraphicsBoard m_GraphicBoard;
         private GameController m_GameControler;
         private bool v_PlayAgainstPC = false;
@@ -38,6 +42,15 @@ namespace B15_Ex05
             m_GraphicBoard.ShowDialog();
         }
 
+        //publish correct user input
+        protected virtual void OnPulishCorrectUserInputFromGraphicBoard(int[] i_buttonIndex)
+        {
+            if (PulishCorrectUserInputFromGraphicBoard != null)
+            {
+                PulishCorrectUserInputFromGraphicBoard(i_buttonIndex, EventArgs.Empty);
+            }
+        }
+
 
         public void OnUserClickedButtonEventHandler(object source, EventArgs args)
         {
@@ -47,6 +60,7 @@ namespace B15_Ex05
             Console.WriteLine(buttonIndex[0].ToString() + "," + buttonIndex[1].ToString());
             Console.WriteLine("entered");
             //m_PlayerWantedMove = buttonIndex;
+            OnPulishCorrectUserInputFromGraphicBoard(buttonIndex);
         }
 
 

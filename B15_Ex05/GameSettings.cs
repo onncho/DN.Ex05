@@ -13,7 +13,9 @@ namespace B15_Ex05
     {
         // Define Delegate to raise events
         //public event EventHandler BoardSizeEventHandler BoardSizeChosen;
-        
+
+        public event EventHandler GameOptionChoiceEventHandler;
+
         Button m_ButtonBoardSize = new Button();
         Button m_ButtonAgainstComputer = new Button();
         Button m_ButtonAgainstPlayer = new Button();
@@ -31,6 +33,19 @@ namespace B15_Ex05
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Othello - Game Settings";          
         }
+
+
+        //publish which game mode the user chose.
+        internal virtual void OnGameOptionChoiceEventHandler()
+        {
+            if (GameOptionChoiceEventHandler != null)
+            {
+                GameOptionChoiceEventHandler(this, EventArgs.Empty);
+            }
+        }
+
+
+
 
         /// <summary>
         /// This method will be called once, just before the first time the form is displayed
@@ -76,13 +91,15 @@ namespace B15_Ex05
 
         private void m_ButtonAgainstComputer_Click(object sender, EventArgs e)
         {
-            GameController gc = new GameController(false);
+        //    GameController gc = new GameController(false);
            
-            //TODD - call the graphic board
-            GraphicsBoard board = new GraphicsBoard(m_BoardSizeIndex, false);
-            board.UserClickedButtonEventHandler += gc.OnUserClickedButtonEventHandler;
+        //    //TODD - call the graphic board
+        //    GraphicsBoard board = new GraphicsBoard(m_BoardSizeIndex, false);
+            GameFlow gameFlow = new GameFlow(this.m_BoardSizeIndex, true);
+            //this.OnGameOptionChoiceEventHandler += gameFlow.OnGameOptionChoiceEventHandler;
+            //board.UserClickedButtonEventHandler += gc.OnUserClickedButtonEventHandler;
 
-            board.ShowDialog();
+            //board.ShowDialog();
 
         }
 

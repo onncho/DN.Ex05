@@ -85,9 +85,13 @@ namespace B15_Ex05
             
         }
 
-        public void addEvent(int buttonIndexI, int buttonIndexJ)
+        public void addEvent(int i_ButtonIndexI, int i_ButtonIndexJ)
         {
-            
+            m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click += this.doSome;
+        }
+
+        public void removeEvent(int i_ButtonIndexI, int i_ButtonIndexJ) {
+            m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click -= this.doSome;
         }
 
         private void GraphicsBoard_Load(object sender, EventArgs e)

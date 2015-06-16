@@ -7,13 +7,16 @@ namespace B15_Ex05
 
     class GameController
     {
-        public event EventHandler EmptyCellesChangeEventHandler;
+        public event EventHandler PublishLegalMovesAndAddListener;
+        public event EventHandler PublishLegalMovesAndRemoveListener;
 
         // What we need to pass : 
         // 1. updated matrix
         // 2. who's turn
         // 3. possible moves (green)
         // 4. end game
+
+        private int[] m_PlayerWantedMove;
 
         private int m_boardSize;
         private int[,] m_gameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
@@ -56,10 +59,23 @@ namespace B15_Ex05
             m_gameMatrix[centeredChips, centeredChipsMinusOne] = 1;
         }
 
-        // publish every time when the empty cells will be change
-        protected virtual void OnEmptyCellesChangeEventHandler(){
-            if (EmptyCellesChangeEventHandler != null) {
-                EmptyCellesChangeEventHandler(this,EventArgs.Empty);
+
+        
+
+        // publish every time        
+        protected virtual void OnPublishLegalMovesAndAddListener(List<int[]> i_toPublish)
+        {
+            if (PublishLegalMovesAndAddListener != null) {
+                PublishLegalMovesAndAddListener(i_toPublish,EventArgs.Empty);
+            }
+        }
+
+        // publish every time        
+        protected virtual void OnPublishLegalMovesAndRemoveListener(List<int[]> i_toPublish)
+        {
+            if (PublishLegalMovesAndRemoveListener != null)
+            {
+                PublishLegalMovesAndRemoveListener(i_toPublish, EventArgs.Empty);
             }
         }
 
@@ -104,10 +120,12 @@ namespace B15_Ex05
                 }
                 else if (firstPlayer)
                 {
+                    
+
                     // @TODO: cancel the matrix print 
                     GameIO.printNextPlayerTurn(m_playerOne.getPlayerIdentifier());
 
-                    if (playerMoveFlow(m_playerOne, isThereAnyMoveToPlayerOne))
+                    if (playerMoveFlow(m_playerOne, isThereAnyMoveToPlayerOne, m_PlayerWantedMove))
                     {
                         firstPlayer = !firstPlayer;
                         Console.Clear();
@@ -125,7 +143,7 @@ namespace B15_Ex05
                         
                         GameIO.printNextPlayerTurn(m_playerTwo.getPlayerIdentifier());
 
-                        if (playerMoveFlow(m_playerTwo, isThereAnyMoveToPlayerTwo))
+                        if (playerMoveFlow(m_playerTwo, isThereAnyMoveToPlayerTwo, m_PlayerWantedMove))
                         {
                             firstPlayer = !firstPlayer;
                             Console.Clear();
@@ -243,15 +261,23 @@ namespace B15_Ex05
             Console.WriteLine("Exit");
         }
 
-        public void OnUserClickedButtonEventHandler(object source, EventArgs args) {
-            int[] buttonIndex = source as int[];
-            Console.WriteLine(buttonIndex[0].ToString() + "," + buttonIndex[1].ToString());
-            Console.WriteLine("entered");
-        }
+        //public void OnUserClickedButtonEventHandler(object source, EventArgs args) {
+        //    int[] buttonIndex = source as int[];
+        //    Console.WriteLine(buttonIndex[0].ToString() + "," + buttonIndex[1].ToString());
+        //    Console.WriteLine("entered");
+        //    m_PlayerWantedMove = buttonIndex;
+        //}
 
 
         public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer, int[] i_playerWantedMove)
         {
+            // legal moves
+            List<int[]> legalMoves = isThereAnyMovesLeftList(m_playerOne.getPlayerIdentifier());
+            OnPublishLegalMovesAndAddListener(legalMoves);
+            
+
+
+            Console.WriteLine(i_playerWantedMove[0].ToString() + "," + i_playerWantedMove[1].ToString());
             bool validStepByPlayer = false;
 
             List<int[]> collectionOfDirections;
@@ -261,6 +287,9 @@ namespace B15_Ex05
             {
                 // @ TODO: change to function that gets input from click
                 //i_playerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
+
+
+
                 collectionOfDirections = guessMoves(i_playerWantedMove[0], i_playerWantedMove[1], i_player.getPlayerIdentifier());
                 validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, i_playerWantedMove);
             }

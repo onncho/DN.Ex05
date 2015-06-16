@@ -11,15 +11,24 @@ namespace B15_Ex05
     {
         public static void Main() 
         {
-            GameSettings myform = new GameSettings(); 
-            myform.ShowDialog();
+            
 
-
-            //subscriber
-            GameController gc = new GameController(false);
-            //register and pass the referance to the method
-
-
+            getSettingsFromUser();
         }
+
+        private static void getSettingsFromUser()
+        {
+            GameSettings gameSettingsForm = new GameSettings();
+            gameSettingsForm.ShowDialog();
+        }
+
+
+        public void OnUserClickedButtonEventHandler(object source, EventArgs args)
+        {
+            //int[] buttonIndex = source as int[];
+            Console.WriteLine("entered Program Class");
+        }
+
+
     }
 }

@@ -20,29 +20,29 @@ namespace B15_Ex05
 
         private int[] m_PlayerWantedMove;
 
-        private int m_boardSize;
+        private int m_BoardSize;
         private int[,] m_gameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
         private List<int[]> m_emptyCellsCollection;
         private Player m_playerOne, m_playerTwo;
         private Board m_gameBoard;
 
-        public GameController(bool i_toSetMaxSize)
+        public GameController(int i_matrixSize)
         {
-            this.m_boardSize = i_toSetMaxSize ? 8 : 6; //@TODO: need to support more sizes
-            this.m_gameMatrix = new int[m_boardSize, m_boardSize]; // initiliaze it automaticaly as 0 - none player
+            this.m_BoardSize = i_matrixSize;// ? 8 : 6; //@TODO: need to support more sizes
+            this.m_gameMatrix = new int[m_BoardSize, m_BoardSize]; // initiliaze it automaticaly as 0 - none player
             int centeredChips = 0, centeredChipsMinusOne = 0;
 
             m_emptyCellsCollection = new List<int[]>();
 
-            this.m_gameBoard = new Board(i_toSetMaxSize); // create console board
+            //this.m_gameBoard = new Board(i_matrixSize); // create console board
 
-            centeredChips = (m_boardSize / 2);
+            centeredChips = (m_BoardSize / 2);
             centeredChipsMinusOne = centeredChips - 1;
 
             //initiate all matrix cells with 0;
-            for (int i = 0; i < m_boardSize; i++)
+            for (int i = 0; i < m_BoardSize; i++)
             {
-                for (int j = 0; j < m_boardSize; j++)
+                for (int j = 0; j < m_BoardSize; j++)
                 {
                     m_gameMatrix[i, j] = 0;
                     if (i != centeredChipsMinusOne && j != centeredChipsMinusOne ||
@@ -473,8 +473,8 @@ namespace B15_Ex05
 
         private bool tupleInsideBoard(int i_row, int i_col)
         {
-            bool isRowLegit = i_row < m_boardSize && i_row > -1,
-                 isColLegit = i_col < m_boardSize && i_col > -1,
+            bool isRowLegit = i_row < m_BoardSize && i_row > -1,
+                 isColLegit = i_col < m_BoardSize && i_col > -1,
                  isLegit = false;
 
             if (isRowLegit && isColLegit)

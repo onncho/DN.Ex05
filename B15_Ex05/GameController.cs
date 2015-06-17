@@ -86,8 +86,7 @@ namespace B15_Ex05
             m_gameMatrix[centeredChipsMinusOne, centeredChips] = 1;
             m_gameMatrix[centeredChips, centeredChipsMinusOne] = 1;
 
-            //publish change
-            OnModelBoardChanged();
+            
         }
 
 
@@ -136,6 +135,8 @@ namespace B15_Ex05
             {
                 this.m_playerTwo = new Player(i_playerTwo.getPlayerIdentifier(), i_playerTwo.getPlayerName(), false);
             }
+
+            OnModelBoardChanged();
         }
 
         public void runMyGame()
@@ -218,6 +219,15 @@ namespace B15_Ex05
                     GameIO.printErrorForInvalidMove();
                 }
             }
+        }
+
+
+        internal void pcMove()
+        {
+            List<int[]> validPoints = isThereAnyMovesLeftList(m_playerTwo.getPlayerIdentifier());
+            int[] pointToInsertTo = getRandomPointForPC(validPoints);
+            List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_playerTwo.getPlayerIdentifier());
+            executePlayerMove(validDirectionsForPoint, m_playerTwo, pointToInsertTo);
         }
 
         private int[] getRandomPointForPC(List<int[]> i_validPoints)
@@ -305,13 +315,6 @@ namespace B15_Ex05
             Console.WriteLine("Exit");
         }
 
-        //public void OnUserClickedButtonEventHandler(object source, EventArgs args) {
-        //    int[] buttonIndex = source as int[];
-        //    Console.WriteLine(buttonIndex[0].ToString() + "," + buttonIndex[1].ToString());
-        //    Console.WriteLine("entered");
-        //    m_PlayerWantedMove = buttonIndex;
-        //}
-
         // get the input form user to next move
         public int[] OnPulishCorrectUserInputFromGraphicBoard(object source){
             
@@ -320,42 +323,23 @@ namespace B15_Ex05
             return buttonIndex;
         }
 
-        public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer, int[] i_playerWantedMove)
+        public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer, int[] i_PlayerWantedMove)
         {
-            // legal moves
-            List<int[]> legalMoves = isThereAnyMovesLeftList(m_playerOne.getPlayerIdentifier());
-            //OnPublishLegalMovesAndAddListener(legalMoves);
-            
-            bool validStepByPlayer = false; 
-
-
-            //Console.WriteLine(i_playerWantedMove[0].ToString() + "," + i_playerWantedMove[1].ToString());
-
-
-
+            bool validStepByPlayer = false;
 
             List<int[]> collectionOfDirections;
-            ///int[] i_playerWantedMove;
 
             if (i_isThereAnyMovesToPlayer)
             {
-                // @ TODO: change to function that gets input from click
-                //i_playerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
+                //i_PlayerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
 
-
-
-                collectionOfDirections = guessMoves(i_playerWantedMove[0], i_playerWantedMove[1], i_player.getPlayerIdentifier());
-                validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, i_playerWantedMove);
-            }
-            else
-            {
-                // @TODO - check how to display for player
-                GameIO.printCustomMessage("Sorry seems like Player has no moves he can do");
+                collectionOfDirections = guessMoves(i_PlayerWantedMove[0], i_PlayerWantedMove[1], i_player.getPlayerIdentifier());
+                validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, i_PlayerWantedMove);
             }
 
             return validStepByPlayer;
         }
-
+        
         private bool executePlayerMove(List<int[]> i_listOfDirections, Player i_player, int[] i_playerWantedMove)
         {
             bool canExecute = false;
@@ -375,6 +359,8 @@ namespace B15_Ex05
                     removeEmptyCellFromList(new int[2] { iStart, jStart });
 
                 }
+
+                OnModelBoardChanged();
             }
 
             return canExecute;
@@ -558,7 +544,7 @@ namespace B15_Ex05
             currentRowIndex += i_iDirection;
             currentColIndex += i_jDirection;
 
-
+            //@TODO: -1 exception
             while (m_gameMatrix[currentRowIndex, currentColIndex] != 0)
             {
                 m_gameMatrix[currentRowIndex, currentColIndex] = i_playerIdentifier;

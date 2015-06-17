@@ -10,34 +10,33 @@ namespace B15_Ex05
 
         private int m_BoardSize;
         private bool v_PlayAgainstPc = false;
-        
+
         private GameController m_GameControler;
-        private Player m_PlayerOne, m_PlayerTwo;
+        internal Player m_PlayerOne, m_PlayerTwo;
+
+        internal bool m_FirstPlayerTurn = false;
+
+
 
         public ViewModel(int i_BoardSize, bool i_PlayAgainstPc)
         {
             m_BoardSize = i_BoardSize;
             v_PlayAgainstPc = i_PlayAgainstPc;
+           
+            
         }
-        
+
         public event EventHandler BoardChanged;
         public event EventHandler GameOver;
 
-        internal void runGame() 
+        internal void runGame()
         {
             m_GameControler = new GameController(m_BoardSize);
-
-            Player m_PlayerOne = new Player(1, "1", false);
-            Player m_PlayerTwo = v_PlayAgainstPc ? new Player(-1, "2", true) : new Player(-1, "2", false);
-
-            m_GameControler.initPlayers(m_PlayerOne, m_PlayerTwo, v_PlayAgainstPc);
+            m_PlayerOne = new Player(1, "1", false);
+            m_PlayerTwo = v_PlayAgainstPc ? new Player(-1, "2", true) : new Player(-1, "2", false);
             m_GameControler.ModelBoardChanged += this.OnModelBoardChanged;
-            m_GameControler.runGame();
+            m_GameControler.initPlayers(m_PlayerOne, m_PlayerTwo, v_PlayAgainstPc);
         }
-
-
-        
-
 
         internal void move(int[] i_PlayerWantedMove)
         {
@@ -45,6 +44,10 @@ namespace B15_Ex05
 
             //send to a method that checks if the move is valid, if it is a board change event need to occur.
             //m_GameControler.CHECKIT
+
+            // change to other player becuase if we got here the user pressed legal move;
+            Player player = m_FirstPlayerTurn ? m_PlayerOne : m_PlayerTwo;
+            m_GameControler.playerMoveFlow(player, true, i_PlayerWantedMove);
         }
 
         // listener to model board change from the logic layer
@@ -59,8 +62,16 @@ namespace B15_Ex05
         {
             if (BoardChanged != null)
             {
-                BoardChanged(this, EventArgs.Empty);
+                BoardChanged(this.m_GameControler, EventArgs.Empty);
             }
+        }
+
+
+        internal List<int[]> getPlayerMoves()
+        {
+            
+            return (m_FirstPlayerTurn ? m_GameControler.getMovesByPlayer(m_PlayerOne) :
+                    m_GameControler.getMovesByPlayer(m_PlayerTwo));
         }
     }
 }

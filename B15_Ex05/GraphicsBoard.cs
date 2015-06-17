@@ -19,6 +19,8 @@ namespace B15_Ex05
         private int m_LastFilledIndex;
         private ViewModel m_ViewModel;
 
+        private List<int[]> m_playerMoves;
+
         public GraphicsBoard(int i_boardSize, bool i_multiplayer)
         {
             m_BoardSize = i_boardSize;
@@ -33,11 +35,11 @@ namespace B15_Ex05
                 for (int j = 0; j < m_BoardSize; j++)
                 {
                     m_gameMatrix[i, j] = new Button();
-                    m_gameMatrix[i, j].Size = new Size(new Point( 50 ,   50 ));
-                    m_gameMatrix[i, j].Location = new Point(50 * j , 50 * i );
+                    m_gameMatrix[i, j].Size = new Size(new Point(50, 50));
+                    m_gameMatrix[i, j].Location = new Point(50 * j, 50 * i);
                     m_gameMatrix[i, j].Text = "(" + j + ", " + i + ")";
                     m_gameMatrix[i, j].Tag = new int[2] { i, j };
-                    m_gameMatrix[i, j].Click += new EventHandler(doSome);
+                    //m_gameMatrix[i, j].Click += new EventHandler(doSome);
                     m_GameControls[m_LastFilledIndex] = m_gameMatrix[i, j];
                     m_LastFilledIndex++;
                 }
@@ -46,10 +48,16 @@ namespace B15_Ex05
             InitializeComponent();
 
             //register to event from viewModel
-            m_ViewModel.BoardChanged += new EventHandler(OnBoardChanged);
-            
+            //m_ViewModel.BoardChanged += new EventHandler(OnBoardChanged);
+            m_ViewModel.BoardChanged += this.OnBoardChanged;
+
             //run game
             m_ViewModel.runGame();
+
+            //Set background color
+            this.BackColor = Color.LightGray;
+
+            this.ShowDialog();
 
         }
 
@@ -65,7 +73,7 @@ namespace B15_Ex05
 
         private void InitializeComponent()
         {
-            
+
             this.SuspendLayout();
             // 
             // GraphicsBoard
@@ -74,48 +82,87 @@ namespace B15_Ex05
             this.ClientSize = new System.Drawing.Size(m_BoardSize * 50, m_BoardSize * 50);
             this.Name = "GraphicsBoard";
             this.Load += new System.EventHandler(this.GraphicsBoard_Load);
-            
-            
+
+
             this.ResumeLayout(false);
 
         }
 
         private void doSome(object sender, EventArgs e)
         {
-            if(sender is Button)
+            if (sender is Button)
             {
                 Button button = sender as Button;
                 int[] tuple = button.Tag as int[];
-                //OnUserClickedButtonEventHandler(tuple);
 
                 //call the move function with the clicked butotn index
+                removeListeners();
                 m_ViewModel.move(tuple);
             }
-            
+
         }
 
-        public void addEvent(int i_ButtonIndexI, int i_ButtonIndexJ)
+        private void removeListeners()
         {
-            m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click += this.doSome;
+            foreach (int[] tuple in m_playerMoves)
+            {
+                m_gameMatrix[tuple[0], tuple[1]].BackColor = Color.White;
+                m_gameMatrix[tuple[0], tuple[1]].Click -= this.doSome;
+            }
         }
 
-        public void removeEvent(int i_ButtonIndexI, int i_ButtonIndexJ) {
-            m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click -= this.doSome;
-        }
+        //public void addEvent(int i_ButtonIndexI, int i_ButtonIndexJ)
+        //{
+        //    m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click += this.doSome;
+        //}
+
+        //public void removeEvent(int i_ButtonIndexI, int i_ButtonIndexJ) {
+        //    m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click -= this.doSome;
+        //}
 
         private void GraphicsBoard_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         // listen when the board changed and update it accordingly
         public void OnBoardChanged(object source, EventArgs args)
         {
-            int[,] i_BoardMatrix = source as int[,];
-            updateGraphicBoard(i_BoardMatrix);
+            GameController gameControler = source as GameController;
+            int[,] boardMatrix = gameControler.getMatrix();
+            updateGraphicBoard(boardMatrix);
+            m_ViewModel.m_FirstPlayerTurn = !m_ViewModel.m_FirstPlayerTurn;
+            printTitleToForm();
+
+            m_playerMoves = m_ViewModel.getPlayerMoves();
+            updatePlayerAvailableMoves(m_playerMoves);
+            
+            //if (!m_ViewModel.m_FirstPlayerTurn && m_Multiplayer)
+            //{
+            //    m_playerMoves = m_ViewModel.getPlayerMoves();
+            //    updatePlayerAvailableMoves(m_playerMoves);
+            //}
+            //else if (m_ViewModel.m_FirstPlayerTurn && !m_Multiplayer)
+            //{
+            //    gameControler.pcMove();
+            //}
         }
 
+        private void printTitleToForm()
+        {
+            string playerTitle = m_ViewModel.m_FirstPlayerTurn ? "Black turn" : "White turn";
+            this.Text = playerTitle;
+        }
 
+        private void updatePlayerAvailableMoves(List<int[]> playerMoves)
+        {
+            foreach (int[] tuple in playerMoves)
+            {
+                m_gameMatrix[tuple[0], tuple[1]].BackColor = Color.YellowGreen;
+                m_gameMatrix[tuple[0], tuple[1]].Click += new EventHandler(doSome);
+
+            }
+        }
 
         private void updateGraphicBoard(int[,] i_BoardMatrix)
         {
@@ -123,7 +170,18 @@ namespace B15_Ex05
             {
                 for (int j = 0; j < m_BoardSize; j++)
                 {
-                    m_gameMatrix[i,j].Text = i_BoardMatrix[i,j].ToString();
+                    if (i_BoardMatrix[i, j] == 1)
+                    {
+                        m_gameMatrix[i, j].BackColor = Color.Black;
+                        m_gameMatrix[i, j].ForeColor = Color.White;
+                        m_gameMatrix[i, j].Text = "O";
+                    }
+                    else if (i_BoardMatrix[i, j] == -1)
+                    {
+                        m_gameMatrix[i, j].BackColor = Color.White;
+                        m_gameMatrix[i, j].ForeColor = Color.Black;
+                        m_gameMatrix[i, j].Text = "O";
+                    }
                 }
             }
         }

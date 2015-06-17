@@ -24,7 +24,7 @@ namespace B15_Ex05
 
         internal void runGame() 
         {
-            m_GameControler = new GameController(false);
+            m_GameControler = new GameController(m_BoardSize);
             m_GameControler.ModelBoardChanged += this.OnModelBoardChanged;
             m_GameControler.runGame();
         }

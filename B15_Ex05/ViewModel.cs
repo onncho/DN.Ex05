@@ -25,9 +25,18 @@ namespace B15_Ex05
         internal void runGame() 
         {
             m_GameControler = new GameController(m_BoardSize);
+
+            Player playerOne = new Player(1, "1", false);
+            Player playerTwo = v_PlayAgainstPc ? new Player(-1, "2", true) : new Player(-1, "2", false);
+
+            m_GameControler.initPlayers(playerOne, playerTwo, v_PlayAgainstPc);
             m_GameControler.ModelBoardChanged += this.OnModelBoardChanged;
             m_GameControler.runGame();
         }
+
+
+        
+
 
         internal void move(int[] i_PlayerWantedMove)
         {

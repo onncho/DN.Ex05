@@ -26,6 +26,32 @@ namespace B15_Ex05
         private Player m_playerOne, m_playerTwo;
         private Board m_gameBoard;
 
+        internal Player PlayerOne
+        {
+            get
+            {
+                return m_playerOne;
+            }
+
+            set
+            {
+                m_playerOne = value;
+            }
+        }
+
+        internal Player PlayerTwo
+        {
+            get
+            {
+                return m_playerTwo;
+            }
+
+            set
+            {
+                m_playerTwo = value;
+            }
+        }
+
         public GameController(int i_matrixSize)
         {
             this.m_BoardSize = i_matrixSize;// ? 8 : 6; //@TODO: need to support more sizes

@@ -7,8 +7,6 @@ using System.Drawing;
 namespace B15_Ex05
 {
 
-    
-
     class GameSettings : Form
     {
         // Define Delegate to raise events
@@ -24,6 +22,7 @@ namespace B15_Ex05
         const string k_EightSize = "Board Size: 8x8 (click to increase)";
         const string k_TenSize = "Board Size: 10x10 (click to increase)";
         const string k_TwelveSize = "Board Size: 12x12 (click to reset)";
+
         int m_BoardSizeIndex = 6;
 
         public GameSettings()
@@ -95,7 +94,12 @@ namespace B15_Ex05
            
         //    //TODD - call the graphic board
         //    GraphicsBoard board = new GraphicsBoard(m_BoardSizeIndex, false);
-            GameFlow gameFlow = new GameFlow(this.m_BoardSizeIndex, true);
+            
+            //not need it because the graphic does that
+            //ViewModel gameFlow = new ViewModel(this.m_BoardSizeIndex, false);
+            //gameFlow.runGame();
+
+            GraphicsBoard gameBoard = new GraphicsBoard(this.m_BoardSizeIndex, false);
             //this.OnGameOptionChoiceEventHandler += gameFlow.OnGameOptionChoiceEventHandler;
             //board.UserClickedButtonEventHandler += gc.OnUserClickedButtonEventHandler;
 
@@ -105,8 +109,8 @@ namespace B15_Ex05
 
         private void m_ButtonAgainstPlayer_Click(object sender, EventArgs e)
         {
-            //TODO - call the graphic board
-            throw new NotImplementedException();
+            ViewModel gameflow = new ViewModel(this.m_BoardSizeIndex, true);
+            GraphicsBoard gameBoard = new GraphicsBoard(this.m_BoardSizeIndex,true);
         }
 
         private void m_ButtonBoardSize_Click(object sender, EventArgs e)

@@ -7,6 +7,8 @@ namespace B15_Ex05
 
     class GameController
     {
+        public event EventHandler ModelBoardChanged;
+        
         public event EventHandler PublishLegalMovesAndAddListener;
         public event EventHandler PublishLegalMovesAndRemoveListener;
 
@@ -57,27 +59,37 @@ namespace B15_Ex05
             m_gameMatrix[centeredChips, centeredChips] = -1;
             m_gameMatrix[centeredChipsMinusOne, centeredChips] = 1;
             m_gameMatrix[centeredChips, centeredChipsMinusOne] = 1;
+
+            //publish change
+            OnModelBoardChanged();
         }
 
 
-        
-
-        // publish every time        
-        protected virtual void OnPublishLegalMovesAndAddListener(List<int[]> i_toPublish)
+        // publish board change
+        protected virtual void OnModelBoardChanged()
         {
-            if (PublishLegalMovesAndAddListener != null) {
-                PublishLegalMovesAndAddListener(i_toPublish,EventArgs.Empty);
-            }
-        }
-
-        // publish every time        
-        protected virtual void OnPublishLegalMovesAndRemoveListener(List<int[]> i_toPublish)
-        {
-            if (PublishLegalMovesAndRemoveListener != null)
+            if (ModelBoardChanged != null)
             {
-                PublishLegalMovesAndRemoveListener(i_toPublish, EventArgs.Empty);
+                ModelBoardChanged(this, EventArgs.Empty);
             }
         }
+
+        //// publish every time        
+        //protected virtual void OnPublishLegalMovesAndAddListener(List<int[]> i_toPublish)
+        //{
+        //    if (PublishLegalMovesAndAddListener != null) {
+        //        PublishLegalMovesAndAddListener(i_toPublish,EventArgs.Empty);
+        //    }
+        //}
+
+        //// publish every time        
+        //protected virtual void OnPublishLegalMovesAndRemoveListener(List<int[]> i_toPublish)
+        //{
+        //    if (PublishLegalMovesAndRemoveListener != null)
+        //    {
+        //        PublishLegalMovesAndRemoveListener(i_toPublish, EventArgs.Empty);
+        //    }
+        //}
 
         public int[,] getMatrix()
         {
@@ -100,10 +112,16 @@ namespace B15_Ex05
             }
         }
 
+        public void runMyGame()
+        {
+
+        }
+
         public void runGame()
         {
             bool firstPlayer = true; // If not first player then second player turn
-            this.m_gameBoard.printBoard(this.getMatrix());// @TODO: this method prints to console
+
+            //this.m_gameBoard.printBoard(this.getMatrix());// @TODO: this method prints to console
 
             while (true)
             {
@@ -280,14 +298,12 @@ namespace B15_Ex05
         {
             // legal moves
             List<int[]> legalMoves = isThereAnyMovesLeftList(m_playerOne.getPlayerIdentifier());
-            OnPublishLegalMovesAndAddListener(legalMoves);
+            //OnPublishLegalMovesAndAddListener(legalMoves);
             
-            bool validStepByPlayer = false;
-
-            int[] 
+            bool validStepByPlayer = false; 
 
 
-            Console.WriteLine(i_playerWantedMove[0].ToString() + "," + i_playerWantedMove[1].ToString());
+            //Console.WriteLine(i_playerWantedMove[0].ToString() + "," + i_playerWantedMove[1].ToString());
 
 
 

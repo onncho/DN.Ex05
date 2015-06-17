@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace B15_Ex05
 {
-    public class GraphicsBoard : Form 
+    public class GraphicsBoard : Form
     {
         //define event for user input by clicking a button
         public event EventHandler UserClickedButtonEventHandler;
@@ -17,6 +17,7 @@ namespace B15_Ex05
         private Button[,] m_gameMatrix;
         private Control[] m_GameControls;
         private int m_LastFilledIndex;
+        private ViewModel m_ViewModel;
 
         public GraphicsBoard(int i_boardSize, bool i_multiplayer)
         {
@@ -25,6 +26,8 @@ namespace B15_Ex05
             m_gameMatrix = new Button[m_BoardSize, m_BoardSize];
             m_GameControls = new Control[m_BoardSize * m_BoardSize];
             m_LastFilledIndex = 0;
+            m_ViewModel = new ViewModel(i_boardSize, m_Multiplayer);
+
             for (int i = 0; i < m_BoardSize; i++)
             {
                 for (int j = 0; j < m_BoardSize; j++)
@@ -34,23 +37,29 @@ namespace B15_Ex05
                     m_gameMatrix[i, j].Location = new Point(50 * j , 50 * i );
                     m_gameMatrix[i, j].Text = "(" + j + ", " + i + ")";
                     m_gameMatrix[i, j].Tag = new int[2] { i, j };
-                    //m_gameMatrix[i, j].Click += new EventHandler(doSome);
+                    m_gameMatrix[i, j].Click += new EventHandler(doSome);
                     m_GameControls[m_LastFilledIndex] = m_gameMatrix[i, j];
                     m_LastFilledIndex++;
                 }
             }
             this.Controls.AddRange(m_GameControls);
             InitializeComponent();
+
+            //register to event from viewModel
+            m_ViewModel.BoardChanged += new EventHandler(OnBoardChanged);
             
+            //run game
+            m_ViewModel.runGame();
 
         }
 
-        // publish event when user pressed a button
-        protected virtual void OnUserClickedButtonEventHandler(int[] i_ButtonIndex) {
-            if (UserClickedButtonEventHandler != null) {
-                UserClickedButtonEventHandler(i_ButtonIndex, EventArgs.Empty);
-            }
-        }
+        //// publish event when user pressed a button
+        //protected virtual void OnUserClickedButtonEventHandler(int[] i_ButtonIndex) {
+        //    if (UserClickedButtonEventHandler != null) {
+        //        UserClickedButtonEventHandler(i_ButtonIndex, EventArgs.Empty);
+        //    }
+        //}
+
 
 
 
@@ -69,9 +78,6 @@ namespace B15_Ex05
             
             this.ResumeLayout(false);
 
-
-            
-
         }
 
         private void doSome(object sender, EventArgs e)
@@ -80,7 +86,10 @@ namespace B15_Ex05
             {
                 Button button = sender as Button;
                 int[] tuple = button.Tag as int[];
-                OnUserClickedButtonEventHandler(tuple);
+                //OnUserClickedButtonEventHandler(tuple);
+
+                //call the move function with the clicked butotn index
+                m_ViewModel.move(tuple);
             }
             
         }
@@ -97,6 +106,26 @@ namespace B15_Ex05
         private void GraphicsBoard_Load(object sender, EventArgs e)
         {
             
+        }
+
+        // listen when the board changed and update it accordingly
+        public void OnBoardChanged(object source, EventArgs args)
+        {
+            int[,] i_BoardMatrix = source as int[,];
+            updateGraphicBoard(i_BoardMatrix);
+        }
+
+
+
+        private void updateGraphicBoard(int[,] i_BoardMatrix)
+        {
+            for (int i = 0; i < m_BoardSize; i++)
+            {
+                for (int j = 0; j < m_BoardSize; j++)
+                {
+                    m_gameMatrix[i,j].Text = i_BoardMatrix[i,j].ToString();
+                }
+            }
         }
     }
 }

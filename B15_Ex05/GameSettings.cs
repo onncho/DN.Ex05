@@ -109,7 +109,7 @@ namespace B15_Ex05
 
         private void m_ButtonAgainstPlayer_Click(object sender, EventArgs e)
         {
-            ViewModel gameflow = new ViewModel(this.m_BoardSizeIndex, true);
+            //ViewModel gameflow = new ViewModel(this.m_BoardSizeIndex, true); // ALREADY IN GAMEBOARD
             GraphicsBoard gameBoard = new GraphicsBoard(this.m_BoardSizeIndex,true);
         }
 

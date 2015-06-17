@@ -588,5 +588,10 @@ namespace B15_Ex05
 
             return operationSucceeded;
         }
+        
+        internal List<int[]> getMovesByPlayer(Player player)
+        {
+            return isThereAnyMovesLeftList(player.getPlayerIdentifier());
+        }
     }
 }

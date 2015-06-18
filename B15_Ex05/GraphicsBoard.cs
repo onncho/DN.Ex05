@@ -47,6 +47,7 @@ namespace B15_Ex05
             this.Controls.AddRange(m_GameControls);
             InitializeComponent();
 
+             
             //register to event from viewModel
             m_ViewModel.BoardChanged += this.OnBoardChanged;
 

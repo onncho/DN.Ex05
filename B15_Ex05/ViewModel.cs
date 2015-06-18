@@ -13,6 +13,9 @@ namespace B15_Ex05
 
         private GameController m_GameControler;
         internal Player m_PlayerOne, m_PlayerTwo;
+        
+        private int m_BlackRoundWon = 0;
+        private int m_WhiteRoundWon = 0;
 
         internal bool m_FirstPlayerTurn = true;
 
@@ -59,7 +62,7 @@ namespace B15_Ex05
             if (gameScore[0] != gameScore[1])
             {
                 finalScoreText = string.Format("{0} Won!! ({1}/{2}) ({3}/{4}) {5}Would you like another round?",
-                
+
 
                 m_MainOthelloLogic.GetWinner(),
                 scores[0],

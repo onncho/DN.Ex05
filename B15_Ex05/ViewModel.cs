@@ -26,6 +26,7 @@ namespace B15_Ex05
         }
 
         public event EventHandler BoardChanged;
+        public event EventHandler HideBoard;
         //public event EventHandler GameOver;
 
         internal void runGame()
@@ -50,50 +51,64 @@ namespace B15_Ex05
         {
             int[] gameScore = m_GameControler.getScore();
 
-            initMessageBox(gameScore);
-
-
-        }
-
-        private void initMessageBox(int[] gameScore)
-        {
-            //List<int> scores = m_MainOthelloLogic.GetScore();
-            string finalScoreText = "";
-            if (gameScore[0] != gameScore[1])
+            // update rounds
+            if (gameScore[0] > gameScore[1])
             {
-                finalScoreText = string.Format("{0} Won!! ({1}/{2}) ({3}/{4}) {5}Would you like another round?",
-
-
-                m_MainOthelloLogic.GetWinner(),
-                scores[0],
-                scores[1],
-                s_Player1Victories,
-                s_Player2Victories,
-                Environment.NewLine);
+                m_BlackRoundWon++;
+            }
+            else if (gameScore[0] < gameScore[1])
+            {
+                m_WhiteRoundWon++;
             }
             else
             {
-                summary = string.Format(
-                "Draw!! ({0}/{1}) ({2}/{3}) {4}Would you like another round?",
-                scores[0],
-                scores[1],
-                s_Player1Victories,
-                s_Player2Victories,
-                Environment.NewLine);
+                m_BlackRoundWon++;
+                m_WhiteRoundWon++;
             }
 
-            DialogResult messageResult = MessageBox.Show(summary, "Othello", MessageBoxButtons.YesNo);
-            if (messageResult == DialogResult.Yes)
-            {
-                this.Hide();
-                OthelloMainGameForm newGame = new OthelloMainGameForm(r_VsHuman, r_BoardSize);
-            }
-
-            System.Environment.Exit(0);
-
-
+            initMessageBox(gameScore);
         }
 
+
+        // publish hide board event when game over and user choose another game
+        protected virtual void OnHideBoard()
+        {
+            if (HideBoard != null)
+            {
+                HideBoard(this, EventArgs.Empty);
+            }
+        }
+
+
+        private void initMessageBox(int[] gameScore)
+        {
+            string winner = " Won!! ", anotherGame = " Would you like another round?";
+            string winnerString = "", amountWon = "", differAmount = "";
+
+            string scoreFormatted = "";
+
+            winnerString = (gameScore[0] > gameScore[1] ? "Black" : "White") + winner;
+            if (gameScore[0] == gameScore[1])
+            {
+                winnerString = "Draw!! ";
+            }
+
+            amountWon = "(" + (gameScore[0] >= gameScore[1] ? m_BlackRoundWon : m_WhiteRoundWon) + "/" + (m_BlackRoundWon + m_WhiteRoundWon) + ")";
+            differAmount = "(" + (gameScore[0] >= gameScore[1] ? gameScore[0] : gameScore[1]) + "/" + (gameScore[0] + gameScore[1]) + ")";
+
+            scoreFormatted = winnerString + differAmount + " " + amountWon + anotherGame;
+
+
+            DialogResult messageResult = MessageBox.Show(scoreFormatted, "Othello", MessageBoxButtons.YesNo);
+            if (messageResult == DialogResult.Yes)
+            {
+                OnHideBoard();
+                
+                //OthelloMainGameForm newGame = new OthelloMainGameForm(r_VsHuman, r_BoardSize);
+            }
+
+            //System.Environment.Exit(0);
+        }
 
 
         // listener to model board change from the logic layer

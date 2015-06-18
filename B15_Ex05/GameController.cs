@@ -22,7 +22,7 @@ namespace B15_Ex05
         private int[,] m_GameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
         private List<int[]> m_EmptyCellsCollection;
         private Player m_PlayerOne, m_PlayerTwo;
-        private Board m_GameBoard;
+        //private Board m_GameBoard;
 
         internal Player PlayerOne
         {
@@ -82,7 +82,7 @@ namespace B15_Ex05
             m_GameMatrix[centeredChipsMinusOne, centeredChips] = 1;
             m_GameMatrix[centeredChips, centeredChipsMinusOne] = 1;
 
-            
+
         }
 
         //publish game over
@@ -148,7 +148,7 @@ namespace B15_Ex05
         //        }
         //        else if (firstPlayer)
         //        {
-                    
+
 
         //            // @TODO: cancel the matrix print 
         //            GameIO.printNextPlayerTurn(m_playerOne.getPlayerIdentifier());
@@ -168,7 +168,7 @@ namespace B15_Ex05
         //            // @TODO: cancel the matrix print
         //            if (!m_playerTwo.isPlayerPC())
         //            {
-                        
+
         //                GameIO.printNextPlayerTurn(m_playerTwo.getPlayerIdentifier());
 
         //                if (playerMoveFlow(m_playerTwo, isThereAnyMoveToPlayerTwo, m_PlayerWantedMove))
@@ -209,8 +209,17 @@ namespace B15_Ex05
         {
             List<int[]> validPoints = isThereAnyMovesLeftList(m_PlayerTwo.getPlayerIdentifier());
             int[] pointToInsertTo = getRandomPointForPC(validPoints);
-            List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_PlayerTwo.getPlayerIdentifier());
-            executePlayerMove(validDirectionsForPoint, m_PlayerTwo, pointToInsertTo);
+
+            if (pointToInsertTo == null)
+            {
+                OnModelBoardChanged();
+            }
+            else
+            {
+                List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_PlayerTwo.getPlayerIdentifier());
+                executePlayerMove(validDirectionsForPoint, m_PlayerTwo, pointToInsertTo);
+
+            }
         }
 
         private int[] getRandomPointForPC(List<int[]> i_validPoints)
@@ -303,8 +312,9 @@ namespace B15_Ex05
         }
 
         // get the input form user to next move
-        public int[] OnPulishCorrectUserInputFromGraphicBoard(object source){
-            
+        public int[] OnPulishCorrectUserInputFromGraphicBoard(object source)
+        {
+
             int[] buttonIndex = source as int[];
 
             return buttonIndex;
@@ -313,20 +323,34 @@ namespace B15_Ex05
         public bool playerMoveFlow(Player i_player, bool i_isThereAnyMovesToPlayer, int[] i_PlayerWantedMove)
         {
             bool validStepByPlayer = false;
+            bool anyMoveLeft = isThereAnyMovesLeft(i_player.getPlayerIdentifier());
 
             List<int[]> collectionOfDirections;
 
-            if (i_isThereAnyMovesToPlayer)
+            if (isGameOver())
             {
-                //i_PlayerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
-
-                collectionOfDirections = guessMoves(i_PlayerWantedMove[0], i_PlayerWantedMove[1], i_player.getPlayerIdentifier());
-                validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, i_PlayerWantedMove);
+                OnGameOver();
             }
+            else
+            {
 
+                if (anyMoveLeft)
+                {
+                    //i_PlayerWantedMove = GameIO.getTargetFromPlayerInput(m_boardSize);
+
+                    collectionOfDirections = guessMoves(i_PlayerWantedMove[0], i_PlayerWantedMove[1], i_player.getPlayerIdentifier());
+                    validStepByPlayer = executePlayerMove(collectionOfDirections, i_player, i_PlayerWantedMove);
+                }
+                else
+                {
+                    OnModelBoardChanged();
+
+
+                }
+            }
             return validStepByPlayer;
         }
-        
+
         private bool executePlayerMove(List<int[]> i_listOfDirections, Player i_player, int[] i_playerWantedMove)
         {
             bool canExecute = false;
@@ -538,7 +562,7 @@ namespace B15_Ex05
                 currentRowIndex += i_iDirection;
                 currentColIndex += i_jDirection;
 
-                if (!this.tupleInsideBoard(currentRowIndex, currentColIndex)) 
+                if (!this.tupleInsideBoard(currentRowIndex, currentColIndex))
                 {
                     break;
                 }
@@ -567,38 +591,39 @@ namespace B15_Ex05
 
             return operationSucceeded;
         }
-        
+
         internal List<int[]> getMovesByPlayer(Player player)
         {
             return isThereAnyMovesLeftList(player.getPlayerIdentifier());
         }
 
-        internal bool isGameOver() 
+        internal bool isGameOver()
         {
             bool gameOver = false;
-             bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_PlayerOne.getPlayerIdentifier()),
-                    isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_PlayerTwo.getPlayerIdentifier());
+            bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_PlayerOne.getPlayerIdentifier()),
+                   isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_PlayerTwo.getPlayerIdentifier());
 
-               if (!isThereAnyMoveToPlayerOne && !isThereAnyMoveToPlayerTwo)
-                {
-                    // shout for end game
-                    gameOver = true;
-                }
-               return gameOver;
+            if (!isThereAnyMoveToPlayerOne && !isThereAnyMoveToPlayerTwo)
+            {
+                // shout for end game
+                gameOver = true;
+                OnGameOver();
+            }
+            return gameOver;
         }
 
         internal int[] getScore()
         {
             int[] score = new int[2] { 0, 0 };
-            for(int i = 0; i < m_GameMatrix.Length; i++)
+            for (int i = 0; i < m_GameMatrix.Length; i++)
             {
-                for(int j = 0; j < m_GameMatrix.Length; j++)
+                for (int j = 0; j < m_GameMatrix.Length; j++)
                 {
-                    if(m_GameMatrix[i,j] == 1)
+                    if (m_GameMatrix[i, j] == 1)
                     {
                         score[0]++;
                     }
-                    else if(m_GameMatrix[i,j] == -1)
+                    else if (m_GameMatrix[i, j] == -1)
                     {
                         score[1]++;
                     }

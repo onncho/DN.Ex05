@@ -14,7 +14,6 @@ namespace B15_Ex05
         private Control[] m_GameControls;
         private int m_LastFilledIndex;
         private ViewModel m_ViewModel;
-
         private List<int[]> m_playerMoves;
         private bool m_FirstIteration = true;
 
@@ -170,6 +169,14 @@ namespace B15_Ex05
                     }
                 }
             }
+        }
+
+
+
+        public void OnHideBoard(object source, EventArgs args) 
+        {
+            this.Hide();
+
         }
     }
 }

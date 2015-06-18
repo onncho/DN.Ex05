@@ -19,11 +19,11 @@ namespace B15_Ex05
         public ViewModel(int i_BoardSize, bool i_multiplayer)
         {
             m_BoardSize = i_BoardSize;
-            v_Multiplayer = i_multiplayer;   
+            v_Multiplayer = i_multiplayer;
         }
 
         public event EventHandler BoardChanged;
-        public event EventHandler GameOver;
+        //public event EventHandler GameOver;
 
         internal void runGame()
         {
@@ -31,6 +31,7 @@ namespace B15_Ex05
             m_PlayerOne = new Player(1, "1", false);
             m_PlayerTwo = v_Multiplayer ? new Player(-1, "2", false) : new Player(-1, "2", true);
             m_GameControler.ModelBoardChanged += this.OnModelBoardChanged;
+            m_GameControler.GameOver += this.OnGameOver;
             m_GameControler.initPlayers(m_PlayerOne, m_PlayerTwo, !v_Multiplayer);
         }
 
@@ -40,6 +41,57 @@ namespace B15_Ex05
             Player player = m_FirstPlayerTurn ? m_PlayerOne : m_PlayerTwo;
             m_GameControler.playerMoveFlow(player, true, i_PlayerWantedMove);
         }
+
+        //publish game over
+        public void OnGameOver(object source, EventArgs args)
+        {
+            int[] gameScore = m_GameControler.getScore();
+
+            initMessageBox(gameScore);
+
+
+        }
+
+        private void initMessageBox(int[] gameScore)
+        {
+            //List<int> scores = m_MainOthelloLogic.GetScore();
+            string finalScoreText = "";
+            if (gameScore[0] != gameScore[1])
+            {
+                finalScoreText = string.Format("{0} Won!! ({1}/{2}) ({3}/{4}) {5}Would you like another round?",
+                
+
+                m_MainOthelloLogic.GetWinner(),
+                scores[0],
+                scores[1],
+                s_Player1Victories,
+                s_Player2Victories,
+                Environment.NewLine);
+            }
+            else
+            {
+                summary = string.Format(
+                "Draw!! ({0}/{1}) ({2}/{3}) {4}Would you like another round?",
+                scores[0],
+                scores[1],
+                s_Player1Victories,
+                s_Player2Victories,
+                Environment.NewLine);
+            }
+
+            DialogResult messageResult = MessageBox.Show(summary, "Othello", MessageBoxButtons.YesNo);
+            if (messageResult == DialogResult.Yes)
+            {
+                this.Hide();
+                OthelloMainGameForm newGame = new OthelloMainGameForm(r_VsHuman, r_BoardSize);
+            }
+
+            System.Environment.Exit(0);
+
+
+        }
+
+
 
         // listener to model board change from the logic layer
         public void OnModelBoardChanged(object source, EventArgs args)
@@ -58,7 +110,7 @@ namespace B15_Ex05
         }
 
         internal List<int[]> getPlayerMoves()
-        {  
+        {
             return (m_FirstPlayerTurn ? m_GameControler.getMovesByPlayer(m_PlayerOne) :
                     m_GameControler.getMovesByPlayer(m_PlayerTwo));
         }

@@ -8,6 +8,7 @@ namespace B15_Ex05
     class GameController
     {
         public event EventHandler ModelBoardChanged;
+        public event EventHandler GameOver;
 
         // What we need to pass : 
         // 1. updated matrix
@@ -82,6 +83,15 @@ namespace B15_Ex05
             m_GameMatrix[centeredChips, centeredChipsMinusOne] = 1;
 
             
+        }
+
+        //publish game over
+        protected virtual void OnGameOver()
+        {
+            if (GameOver != null)
+            {
+                GameOver(this, EventArgs.Empty);
+            }
         }
 
 

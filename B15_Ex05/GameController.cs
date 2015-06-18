@@ -527,7 +527,13 @@ namespace B15_Ex05
                 m_gameMatrix[currentRowIndex, currentColIndex] = i_playerIdentifier;
                 currentRowIndex += i_iDirection;
                 currentColIndex += i_jDirection;
+
+                if (!this.tupleInsideBoard(currentRowIndex, currentColIndex)) 
+                {
+                    break;
+                }
             }
+
 
         }
 
@@ -555,6 +561,20 @@ namespace B15_Ex05
         internal List<int[]> getMovesByPlayer(Player player)
         {
             return isThereAnyMovesLeftList(player.getPlayerIdentifier());
+        }
+
+        internal bool isGameOver() 
+        {
+            bool gameOver = false;
+             bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_playerOne.getPlayerIdentifier()),
+                    isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_playerTwo.getPlayerIdentifier());
+
+               if (!isThereAnyMoveToPlayerOne && !isThereAnyMoveToPlayerTwo)
+                {
+                    // shout for end game
+                    gameOver = true;
+                }
+               return gameOver;
         }
     }
 }

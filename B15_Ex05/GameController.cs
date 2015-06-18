@@ -18,21 +18,21 @@ namespace B15_Ex05
         //private int[] m_PlayerWantedMove;
 
         private int m_BoardSize;
-        private int[,] m_gameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
-        private List<int[]> m_emptyCellsCollection;
-        private Player m_playerOne, m_playerTwo;
-        private Board m_gameBoard;
+        private int[,] m_GameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
+        private List<int[]> m_EmptyCellsCollection;
+        private Player m_PlayerOne, m_PlayerTwo;
+        private Board m_GameBoard;
 
         internal Player PlayerOne
         {
             get
             {
-                return m_playerOne;
+                return m_PlayerOne;
             }
 
             set
             {
-                m_playerOne = value;
+                m_PlayerOne = value;
             }
         }
 
@@ -40,22 +40,22 @@ namespace B15_Ex05
         {
             get
             {
-                return m_playerTwo;
+                return m_PlayerTwo;
             }
 
             set
             {
-                m_playerTwo = value;
+                m_PlayerTwo = value;
             }
         }
 
         public GameController(int i_matrixSize)
         {
             this.m_BoardSize = i_matrixSize;// ? 8 : 6; //@TODO: need to support more sizes
-            this.m_gameMatrix = new int[m_BoardSize, m_BoardSize]; // initiliaze it automaticaly as 0 - none player
+            this.m_GameMatrix = new int[m_BoardSize, m_BoardSize]; // initiliaze it automaticaly as 0 - none player
             int centeredChips = 0, centeredChipsMinusOne = 0;
 
-            m_emptyCellsCollection = new List<int[]>();
+            m_EmptyCellsCollection = new List<int[]>();
 
             centeredChips = (m_BoardSize / 2);
             centeredChipsMinusOne = centeredChips - 1;
@@ -65,21 +65,21 @@ namespace B15_Ex05
             {
                 for (int j = 0; j < m_BoardSize; j++)
                 {
-                    m_gameMatrix[i, j] = 0;
+                    m_GameMatrix[i, j] = 0;
                     if (i != centeredChipsMinusOne && j != centeredChipsMinusOne ||
                         i != centeredChipsMinusOne && j != centeredChips ||
                         i != centeredChips && j != centeredChipsMinusOne ||
                         i != centeredChips && j != centeredChips)
                     {
-                        m_emptyCellsCollection.Add(new int[2] { i, j }); //matrix[i][j] == 0
+                        m_EmptyCellsCollection.Add(new int[2] { i, j }); //matrix[i][j] == 0
                     }
                 }
             }
 
-            m_gameMatrix[centeredChipsMinusOne, centeredChipsMinusOne] = -1; // size / 2 -1
-            m_gameMatrix[centeredChips, centeredChips] = -1;
-            m_gameMatrix[centeredChipsMinusOne, centeredChips] = 1;
-            m_gameMatrix[centeredChips, centeredChipsMinusOne] = 1;
+            m_GameMatrix[centeredChipsMinusOne, centeredChipsMinusOne] = -1; // size / 2 -1
+            m_GameMatrix[centeredChips, centeredChips] = -1;
+            m_GameMatrix[centeredChipsMinusOne, centeredChips] = 1;
+            m_GameMatrix[centeredChips, centeredChipsMinusOne] = 1;
 
             
         }
@@ -96,22 +96,22 @@ namespace B15_Ex05
 
         public int[,] getMatrix()
         {
-            return m_gameMatrix;
+            return m_GameMatrix;
         }
 
         public void initPlayers(Player i_playerOne, Player i_playerTwo, bool i_isSingle)
         {
-            this.m_playerOne = new Player(i_playerOne.getPlayerIdentifier(), i_playerOne.getPlayerName(), false);
+            this.m_PlayerOne = new Player(i_playerOne.getPlayerIdentifier(), i_playerOne.getPlayerName(), false);
 
 
             // place agaist pc or agaist friend 
             if (i_isSingle)
             {
-                this.m_playerTwo = new Player(i_playerTwo.getPlayerIdentifier(), i_playerTwo.getPlayerName(), true);
+                this.m_PlayerTwo = new Player(i_playerTwo.getPlayerIdentifier(), i_playerTwo.getPlayerName(), true);
             }
             else
             {
-                this.m_playerTwo = new Player(i_playerTwo.getPlayerIdentifier(), i_playerTwo.getPlayerName(), false);
+                this.m_PlayerTwo = new Player(i_playerTwo.getPlayerIdentifier(), i_playerTwo.getPlayerName(), false);
             }
 
             OnModelBoardChanged();
@@ -197,10 +197,10 @@ namespace B15_Ex05
 
         internal void pcMove()
         {
-            List<int[]> validPoints = isThereAnyMovesLeftList(m_playerTwo.getPlayerIdentifier());
+            List<int[]> validPoints = isThereAnyMovesLeftList(m_PlayerTwo.getPlayerIdentifier());
             int[] pointToInsertTo = getRandomPointForPC(validPoints);
-            List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_playerTwo.getPlayerIdentifier());
-            executePlayerMove(validDirectionsForPoint, m_playerTwo, pointToInsertTo);
+            List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_PlayerTwo.getPlayerIdentifier());
+            executePlayerMove(validDirectionsForPoint, m_PlayerTwo, pointToInsertTo);
         }
 
         private int[] getRandomPointForPC(List<int[]> i_validPoints)
@@ -235,7 +235,7 @@ namespace B15_Ex05
             List<int[]> pointsToReturn = new List<int[]>();
 
             // Iterating on every empty cell and checking if there exist some move
-            foreach (int[] tuple in this.m_emptyCellsCollection)
+            foreach (int[] tuple in this.m_EmptyCellsCollection)
             {
                 tuplesList = guessMoves(tuple[0], tuple[1], i_playerIdentifier);
                 if (tuplesList.Count >= 1)
@@ -262,15 +262,15 @@ namespace B15_Ex05
                 playerTwoPoints = 0;
             bool winner = false; //true = player one
 
-            for (int i = 0; i < m_gameMatrix.Length; i++)
+            for (int i = 0; i < m_GameMatrix.Length; i++)
             {
-                for (int j = 0; j < m_gameMatrix.Length; j++)
+                for (int j = 0; j < m_GameMatrix.Length; j++)
                 {
-                    if (m_gameMatrix[i, j] == 1)
+                    if (m_GameMatrix[i, j] == 1)
                     {
                         playerOnePoints++;
                     }
-                    else if (m_gameMatrix[i, j] == -1)
+                    else if (m_GameMatrix[i, j] == -1)
                     {
                         playerTwoPoints++;
                     }
@@ -349,7 +349,7 @@ namespace B15_Ex05
             bool moveExist = false;
 
             // Iterating on every empty cell and checking if there exist some move
-            foreach (int[] tuple in this.m_emptyCellsCollection)
+            foreach (int[] tuple in this.m_EmptyCellsCollection)
             {
                 tupleToReturn = guessMoves(tuple[0], tuple[1], i_playerIdentifier);
                 if (tupleToReturn.Count >= 1)
@@ -376,7 +376,7 @@ namespace B15_Ex05
 
             if (isStatringPointInsideBoard)
             {
-                isCellEmpty = m_gameMatrix[i_iStart, i_jStart] == 0;// must be zero as a stating point   
+                isCellEmpty = m_GameMatrix[i_iStart, i_jStart] == 0;// must be zero as a stating point   
             }
 
             for (int iDirection = -1; iDirection < 2; iDirection++)
@@ -420,7 +420,7 @@ namespace B15_Ex05
 
             if (tupleInsideBoard(iToCheck, jToCheck))
             {
-                isCellEmpty = m_gameMatrix[iToCheck, jToCheck] == 0;
+                isCellEmpty = m_GameMatrix[iToCheck, jToCheck] == 0;
 
                 if (isCellEmpty)
                 {
@@ -429,7 +429,7 @@ namespace B15_Ex05
 
                 else
                 {
-                    while (m_gameMatrix[iToCheck, jToCheck] == i_playerColor * (-1))
+                    while (m_GameMatrix[iToCheck, jToCheck] == i_playerColor * (-1))
                     {
                         iToCheck += i_iDirection;
                         jToCheck += i_jDirection;
@@ -443,7 +443,7 @@ namespace B15_Ex05
 
                     if (tupleInsideBoard(iToCheck, jToCheck))
                     {
-                        if (m_gameMatrix[iToCheck, jToCheck] == i_playerColor)
+                        if (m_GameMatrix[iToCheck, jToCheck] == i_playerColor)
                         {
                             returnValue = true;
                         }
@@ -485,8 +485,8 @@ namespace B15_Ex05
             if (isStartingPointInside && isNextPointInside)
             {
 
-                int firstCell = m_gameMatrix[io_iStart, io_jStart],
-                    secondCell = m_gameMatrix[io_iStart + io_iDirection, io_jStart + io_jDirection];
+                int firstCell = m_GameMatrix[io_iStart, io_jStart],
+                    secondCell = m_GameMatrix[io_iStart + io_iDirection, io_jStart + io_jDirection];
 
                 isFirstCellEmpty = firstCell == 0;
                 isSecondCellIsOtherPlayer = secondCell == io_playerIdenitifier * (-1);
@@ -499,7 +499,7 @@ namespace B15_Ex05
 
         private bool isLastCellIsSatisfysRule(int i_row, int i_col, int i_playerId)
         {
-            int cellIdentifier = m_gameMatrix[i_row, i_col];
+            int cellIdentifier = m_GameMatrix[i_row, i_col];
             bool cellSatify = false;
 
             if (cellIdentifier == 0)
@@ -517,14 +517,14 @@ namespace B15_Ex05
             int currentRowIndex = i_iStart,
                 currentColIndex = i_jStart;
 
-            m_gameMatrix[currentRowIndex, currentColIndex] = i_playerIdentifier;
+            m_GameMatrix[currentRowIndex, currentColIndex] = i_playerIdentifier;
             currentRowIndex += i_iDirection;
             currentColIndex += i_jDirection;
 
             //@TODO: -1 exception
-            while (m_gameMatrix[currentRowIndex, currentColIndex] != 0)
+            while (m_GameMatrix[currentRowIndex, currentColIndex] != 0)
             {
-                m_gameMatrix[currentRowIndex, currentColIndex] = i_playerIdentifier;
+                m_GameMatrix[currentRowIndex, currentColIndex] = i_playerIdentifier;
                 currentRowIndex += i_iDirection;
                 currentColIndex += i_jDirection;
 
@@ -542,7 +542,7 @@ namespace B15_Ex05
             int[] toDelete = new int[2];
             bool isCellExists = false,
                 operationSucceeded = false;
-            foreach (int[] emptyTuple in this.m_emptyCellsCollection)
+            foreach (int[] emptyTuple in this.m_EmptyCellsCollection)
             {
                 if (emptyTuple[0] == i_cellToRemove[0] && emptyTuple[1] == i_cellToRemove[1])
                 {
@@ -552,7 +552,7 @@ namespace B15_Ex05
             }
             if (isCellExists)
             {
-                operationSucceeded = this.m_emptyCellsCollection.Remove(toDelete);
+                operationSucceeded = this.m_EmptyCellsCollection.Remove(toDelete);
             }
 
             return operationSucceeded;
@@ -566,8 +566,8 @@ namespace B15_Ex05
         internal bool isGameOver() 
         {
             bool gameOver = false;
-             bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_playerOne.getPlayerIdentifier()),
-                    isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_playerTwo.getPlayerIdentifier());
+             bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_PlayerOne.getPlayerIdentifier()),
+                    isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_PlayerTwo.getPlayerIdentifier());
 
                if (!isThereAnyMoveToPlayerOne && !isThereAnyMoveToPlayerTwo)
                 {

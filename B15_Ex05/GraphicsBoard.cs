@@ -16,6 +16,7 @@ namespace B15_Ex05
         private ViewModel m_ViewModel;
 
         private List<int[]> m_playerMoves;
+        private bool m_FirstIteration = true;
 
         public GraphicsBoard(int i_boardSize, bool i_multiplayer)
         {
@@ -101,19 +102,28 @@ namespace B15_Ex05
             GameController gameControler = source as GameController;
             int[,] boardMatrix = gameControler.getMatrix();
             updateGraphicBoard(boardMatrix);
-            m_ViewModel.m_FirstPlayerTurn = !m_ViewModel.m_FirstPlayerTurn;
-            printTitleToForm();
+            if (!m_FirstIteration) 
+            {
+                m_ViewModel.m_FirstPlayerTurn = !m_ViewModel.m_FirstPlayerTurn;
+                printTitleToForm();
+            }
+            else 
+            {
+                m_FirstIteration = false;
+            }
+            
 
-            m_playerMoves = m_ViewModel.getPlayerMoves();
-            updatePlayerAvailableMoves(m_playerMoves);
+            //m_playerMoves = m_ViewModel.getPlayerMoves();
+            //updatePlayerAvailableMoves(m_playerMoves);
 
             // @TODO: check the logic when pc plays all the graphics are mass out
 
-            if (m_Multiplayer)
+            if (m_Multiplayer || (!m_Multiplayer && m_ViewModel.m_FirstPlayerTurn))
             {
                 m_playerMoves = m_ViewModel.getPlayerMoves();
                 updatePlayerAvailableMoves(m_playerMoves);
             }
+           
             else if (!m_Multiplayer && !m_ViewModel.m_FirstPlayerTurn)
             {
                 gameControler.pcMove();

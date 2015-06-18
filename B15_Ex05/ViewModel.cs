@@ -9,17 +9,17 @@ namespace B15_Ex05
     {
 
         private int m_BoardSize;
-        private bool v_PlayAgainstPc = false;
+        private bool v_Multiplayer = false;
 
         private GameController m_GameControler;
         internal Player m_PlayerOne, m_PlayerTwo;
 
-        internal bool m_FirstPlayerTurn = false;
+        internal bool m_FirstPlayerTurn = true;
 
-        public ViewModel(int i_BoardSize, bool i_PlayAgainstPc)
+        public ViewModel(int i_BoardSize, bool i_multiplayer)
         {
             m_BoardSize = i_BoardSize;
-            v_PlayAgainstPc = i_PlayAgainstPc;   
+            v_Multiplayer = i_multiplayer;   
         }
 
         public event EventHandler BoardChanged;
@@ -29,9 +29,9 @@ namespace B15_Ex05
         {
             m_GameControler = new GameController(m_BoardSize);
             m_PlayerOne = new Player(1, "1", false);
-            m_PlayerTwo = v_PlayAgainstPc ? new Player(-1, "2", true) : new Player(-1, "2", false);
+            m_PlayerTwo = v_Multiplayer ? new Player(-1, "2", false) : new Player(-1, "2", true);
             m_GameControler.ModelBoardChanged += this.OnModelBoardChanged;
-            m_GameControler.initPlayers(m_PlayerOne, m_PlayerTwo, v_PlayAgainstPc);
+            m_GameControler.initPlayers(m_PlayerOne, m_PlayerTwo, !v_Multiplayer);
         }
 
         internal void move(int[] i_PlayerWantedMove)

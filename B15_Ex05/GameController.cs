@@ -374,6 +374,15 @@ namespace B15_Ex05
                 OnModelBoardChanged();
             }
 
+            if (isGameOver())
+            {
+                OnGameOver();
+            }
+            else if (isThereAnyMovesLeft(i_player.getPlayerIdentifier())) 
+            {
+
+            }
+
             return canExecute;
         }
 

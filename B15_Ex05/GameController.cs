@@ -576,5 +576,25 @@ namespace B15_Ex05
                 }
                return gameOver;
         }
+
+        internal int[] getScore()
+        {
+            int[] score = new int[2] { 0, 0 };
+            for(int i = 0; i < m_GameMatrix.Length; i++)
+            {
+                for(int j = 0; j < m_GameMatrix.Length; j++)
+                {
+                    if(m_GameMatrix[i,j] == 1)
+                    {
+                        score[0]++;
+                    }
+                    else if(m_GameMatrix[i,j] == -1)
+                    {
+                        score[1]++;
+                    }
+                }
+            }
+            return score;
+        }
     }
 }

@@ -8,12 +8,8 @@ namespace B15_Ex05
 {
     public class GraphicsBoard : Form
     {
-        //define event for user input by clicking a button
-        public event EventHandler UserClickedButtonEventHandler;
-
         private int m_BoardSize;
         private bool m_Multiplayer;
-        private int m_ButtonSize = 35;
         private Button[,] m_gameMatrix;
         private Control[] m_GameControls;
         private int m_LastFilledIndex;
@@ -35,6 +31,8 @@ namespace B15_Ex05
                 for (int j = 0; j < m_BoardSize; j++)
                 {
                     m_gameMatrix[i, j] = new Button();
+                    m_gameMatrix[i, j].Enabled = false;
+                    m_gameMatrix[i, j].AutoSize = true;
                     m_gameMatrix[i, j].Size = new Size(new Point(50, 50));
                     m_gameMatrix[i, j].Location = new Point(50 * j, 50 * i);
                     m_gameMatrix[i, j].Text = "(" + j + ", " + i + ")";
@@ -44,11 +42,11 @@ namespace B15_Ex05
                     m_LastFilledIndex++;
                 }
             }
+
             this.Controls.AddRange(m_GameControls);
             InitializeComponent();
 
             //register to event from viewModel
-            //m_ViewModel.BoardChanged += new EventHandler(OnBoardChanged);
             m_ViewModel.BoardChanged += this.OnBoardChanged;
 
             //run game
@@ -58,32 +56,17 @@ namespace B15_Ex05
             this.BackColor = Color.LightGray;
 
             this.ShowDialog();
-
         }
-
-        //// publish event when user pressed a button
-        //protected virtual void OnUserClickedButtonEventHandler(int[] i_ButtonIndex) {
-        //    if (UserClickedButtonEventHandler != null) {
-        //        UserClickedButtonEventHandler(i_ButtonIndex, EventArgs.Empty);
-        //    }
-        //}
-
-
-
 
         private void InitializeComponent()
         {
-
             this.SuspendLayout();
-            // 
-            // GraphicsBoard
-            // 
-
             this.ClientSize = new System.Drawing.Size(m_BoardSize * 50, m_BoardSize * 50);
             this.Name = "GraphicsBoard";
-            this.Load += new System.EventHandler(this.GraphicsBoard_Load);
-
-
+            
+            // @TODO: Check how to fix resize window with all forms
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.ResumeLayout(false);
 
         }
@@ -106,23 +89,10 @@ namespace B15_Ex05
         {
             foreach (int[] tuple in m_playerMoves)
             {
-                m_gameMatrix[tuple[0], tuple[1]].BackColor = Color.White;
+                m_gameMatrix[tuple[0], tuple[1]].BackColor = Color.LightGray;
+                m_gameMatrix[tuple[0], tuple[1]].Enabled = false;
                 m_gameMatrix[tuple[0], tuple[1]].Click -= this.doSome;
             }
-        }
-
-        //public void addEvent(int i_ButtonIndexI, int i_ButtonIndexJ)
-        //{
-        //    m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click += this.doSome;
-        //}
-
-        //public void removeEvent(int i_ButtonIndexI, int i_ButtonIndexJ) {
-        //    m_gameMatrix[i_ButtonIndexI, i_ButtonIndexJ].Click -= this.doSome;
-        //}
-
-        private void GraphicsBoard_Load(object sender, EventArgs e)
-        {
-
         }
 
         // listen when the board changed and update it accordingly
@@ -136,8 +106,10 @@ namespace B15_Ex05
 
             m_playerMoves = m_ViewModel.getPlayerMoves();
             updatePlayerAvailableMoves(m_playerMoves);
-            
-            //if (!m_ViewModel.m_FirstPlayerTurn && m_Multiplayer)
+
+            // @TODO: check the logic when pc plays all the graphics are mass out
+
+            //if (m_ViewModel.m_FirstPlayerTurn && m_Multiplayer)
             //{
             //    m_playerMoves = m_ViewModel.getPlayerMoves();
             //    updatePlayerAvailableMoves(m_playerMoves);
@@ -159,6 +131,7 @@ namespace B15_Ex05
             foreach (int[] tuple in playerMoves)
             {
                 m_gameMatrix[tuple[0], tuple[1]].BackColor = Color.YellowGreen;
+                m_gameMatrix[tuple[0], tuple[1]].Enabled = true;
                 m_gameMatrix[tuple[0], tuple[1]].Click += new EventHandler(doSome);
 
             }
@@ -175,12 +148,14 @@ namespace B15_Ex05
                         m_gameMatrix[i, j].BackColor = Color.Black;
                         m_gameMatrix[i, j].ForeColor = Color.White;
                         m_gameMatrix[i, j].Text = "O";
+                        m_gameMatrix[i, j].Enabled = false;
                     }
                     else if (i_BoardMatrix[i, j] == -1)
                     {
                         m_gameMatrix[i, j].BackColor = Color.White;
                         m_gameMatrix[i, j].ForeColor = Color.Black;
                         m_gameMatrix[i, j].Text = "O";
+                        m_gameMatrix[i, j].Enabled = false;
                     }
                 }
             }

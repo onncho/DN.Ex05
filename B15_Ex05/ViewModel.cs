@@ -16,14 +16,10 @@ namespace B15_Ex05
 
         internal bool m_FirstPlayerTurn = false;
 
-
-
         public ViewModel(int i_BoardSize, bool i_PlayAgainstPc)
         {
             m_BoardSize = i_BoardSize;
-            v_PlayAgainstPc = i_PlayAgainstPc;
-           
-            
+            v_PlayAgainstPc = i_PlayAgainstPc;   
         }
 
         public event EventHandler BoardChanged;
@@ -40,11 +36,6 @@ namespace B15_Ex05
 
         internal void move(int[] i_PlayerWantedMove)
         {
-            // add player move here the connection between the prees and logic
-
-            //send to a method that checks if the move is valid, if it is a board change event need to occur.
-            //m_GameControler.CHECKIT
-
             // change to other player becuase if we got here the user pressed legal move;
             Player player = m_FirstPlayerTurn ? m_PlayerOne : m_PlayerTwo;
             m_GameControler.playerMoveFlow(player, true, i_PlayerWantedMove);
@@ -53,7 +44,7 @@ namespace B15_Ex05
         // listener to model board change from the logic layer
         public void OnModelBoardChanged(object source, EventArgs args)
         {
-            GameController boardMatrix = source as GameController;
+            //GameController boardMatrix = source as GameController;
             OnBoardChanged();
         }
 
@@ -66,10 +57,8 @@ namespace B15_Ex05
             }
         }
 
-
         internal List<int[]> getPlayerMoves()
-        {
-            
+        {  
             return (m_FirstPlayerTurn ? m_GameControler.getMovesByPlayer(m_PlayerOne) :
                     m_GameControler.getMovesByPlayer(m_PlayerTwo));
         }

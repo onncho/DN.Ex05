@@ -8,9 +8,6 @@ namespace B15_Ex05
     class GameController
     {
         public event EventHandler ModelBoardChanged;
-        
-        public event EventHandler PublishLegalMovesAndAddListener;
-        public event EventHandler PublishLegalMovesAndRemoveListener;
 
         // What we need to pass : 
         // 1. updated matrix
@@ -18,7 +15,7 @@ namespace B15_Ex05
         // 3. possible moves (green)
         // 4. end game
 
-        private int[] m_PlayerWantedMove;
+        //private int[] m_PlayerWantedMove;
 
         private int m_BoardSize;
         private int[,] m_gameMatrix; // 0 - empty cell , 1 - player 1 chip , -1 player 2 chip
@@ -60,8 +57,6 @@ namespace B15_Ex05
 
             m_emptyCellsCollection = new List<int[]>();
 
-            //this.m_gameBoard = new Board(i_matrixSize); // create console board
-
             centeredChips = (m_BoardSize / 2);
             centeredChipsMinusOne = centeredChips - 1;
 
@@ -99,23 +94,6 @@ namespace B15_Ex05
             }
         }
 
-        //// publish every time        
-        //protected virtual void OnPublishLegalMovesAndAddListener(List<int[]> i_toPublish)
-        //{
-        //    if (PublishLegalMovesAndAddListener != null) {
-        //        PublishLegalMovesAndAddListener(i_toPublish,EventArgs.Empty);
-        //    }
-        //}
-
-        //// publish every time        
-        //protected virtual void OnPublishLegalMovesAndRemoveListener(List<int[]> i_toPublish)
-        //{
-        //    if (PublishLegalMovesAndRemoveListener != null)
-        //    {
-        //        PublishLegalMovesAndRemoveListener(i_toPublish, EventArgs.Empty);
-        //    }
-        //}
-
         public int[,] getMatrix()
         {
             return m_gameMatrix;
@@ -139,87 +117,82 @@ namespace B15_Ex05
             OnModelBoardChanged();
         }
 
-        public void runMyGame()
-        {
+        //public void runGame()
+        //{
+        //    bool firstPlayer = true; // If not first player then second player turn
 
-        }
+        //    //this.m_gameBoard.printBoard(this.getMatrix());// @TODO: this method prints to console
 
-        public void runGame()
-        {
-            bool firstPlayer = true; // If not first player then second player turn
+        //    while (true)
+        //    {
+        //        bool invalidInput = false;
 
-            //this.m_gameBoard.printBoard(this.getMatrix());// @TODO: this method prints to console
+        //        bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_playerOne.getPlayerIdentifier()),
+        //            isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_playerTwo.getPlayerIdentifier());
 
-            while (true)
-            {
-                bool invalidInput = false;
-
-                bool isThereAnyMoveToPlayerOne = isThereAnyMovesLeft(m_playerOne.getPlayerIdentifier()),
-                    isThereAnyMoveToPlayerTwo = isThereAnyMovesLeft(m_playerTwo.getPlayerIdentifier());
-
-                if (!isThereAnyMoveToPlayerOne && !isThereAnyMoveToPlayerTwo)
-                {
-                    // no one has any moves left
-                    endGame();
-                    break;
-                }
-                else if (firstPlayer)
-                {
+        //        if (!isThereAnyMoveToPlayerOne && !isThereAnyMoveToPlayerTwo)
+        //        {
+        //            // no one has any moves left
+        //            endGame();
+        //            break;
+        //        }
+        //        else if (firstPlayer)
+        //        {
                     
 
-                    // @TODO: cancel the matrix print 
-                    GameIO.printNextPlayerTurn(m_playerOne.getPlayerIdentifier());
+        //            // @TODO: cancel the matrix print 
+        //            GameIO.printNextPlayerTurn(m_playerOne.getPlayerIdentifier());
 
-                    if (playerMoveFlow(m_playerOne, isThereAnyMoveToPlayerOne, m_PlayerWantedMove))
-                    {
-                        firstPlayer = !firstPlayer;
-                        Console.Clear();
-                    }
-                    else
-                    {
-                        invalidInput = true;
-                    }
-                }
-                else
-                {
-                    // @TODO: cancel the matrix print
-                    if (!m_playerTwo.isPlayerPC())
-                    {
+        //            if (playerMoveFlow(m_playerOne, isThereAnyMoveToPlayerOne, m_PlayerWantedMove))
+        //            {
+        //                firstPlayer = !firstPlayer;
+        //                Console.Clear();
+        //            }
+        //            else
+        //            {
+        //                invalidInput = true;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            // @TODO: cancel the matrix print
+        //            if (!m_playerTwo.isPlayerPC())
+        //            {
                         
-                        GameIO.printNextPlayerTurn(m_playerTwo.getPlayerIdentifier());
+        //                GameIO.printNextPlayerTurn(m_playerTwo.getPlayerIdentifier());
 
-                        if (playerMoveFlow(m_playerTwo, isThereAnyMoveToPlayerTwo, m_PlayerWantedMove))
-                        {
-                            firstPlayer = !firstPlayer;
-                            Console.Clear();
+        //                if (playerMoveFlow(m_playerTwo, isThereAnyMoveToPlayerTwo, m_PlayerWantedMove))
+        //                {
+        //                    firstPlayer = !firstPlayer;
+        //                    Console.Clear();
 
-                        }
-                        else
-                        {
-                            invalidInput = true;
-                        }
-                    }
-                    else if (m_playerTwo.isPlayerPC())
-                    {
-                        // @TODO: cancel the matrix print
-                        Console.WriteLine("PC turn");
-                        List<int[]> validPoints = isThereAnyMovesLeftList(m_playerTwo.getPlayerIdentifier());
-                        int[] pointToInsertTo = getRandomPointForPC(validPoints);
-                        List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_playerTwo.getPlayerIdentifier());
-                        Console.WriteLine("(" + pointToInsertTo[0] + "," + pointToInsertTo[1] + ")");
-                        executePlayerMove(validDirectionsForPoint, m_playerTwo, pointToInsertTo);
-                        firstPlayer = !firstPlayer;
-                        Console.Clear();
-                    }
-                }
-                Console.Clear();
-                this.m_gameBoard.printBoard(this.getMatrix());
-                if (invalidInput)
-                {
-                    GameIO.printErrorForInvalidMove();
-                }
-            }
-        }
+        //                }
+        //                else
+        //                {
+        //                    invalidInput = true;
+        //                }
+        //            }
+        //            else if (m_playerTwo.isPlayerPC())
+        //            {
+        //                // @TODO: cancel the matrix print
+        //                Console.WriteLine("PC turn");
+        //                List<int[]> validPoints = isThereAnyMovesLeftList(m_playerTwo.getPlayerIdentifier());
+        //                int[] pointToInsertTo = getRandomPointForPC(validPoints);
+        //                List<int[]> validDirectionsForPoint = chooseMoveForPC(pointToInsertTo, m_playerTwo.getPlayerIdentifier());
+        //                Console.WriteLine("(" + pointToInsertTo[0] + "," + pointToInsertTo[1] + ")");
+        //                executePlayerMove(validDirectionsForPoint, m_playerTwo, pointToInsertTo);
+        //                firstPlayer = !firstPlayer;
+        //                Console.Clear();
+        //            }
+        //        }
+        //        Console.Clear();
+        //        this.m_gameBoard.printBoard(this.getMatrix());
+        //        if (invalidInput)
+        //        {
+        //            GameIO.printErrorForInvalidMove();
+        //        }
+        //    }
+        //}
 
 
         internal void pcMove()
@@ -246,6 +219,8 @@ namespace B15_Ex05
             return moveToReturn;
         }
 
+        //@TODO: An unhandled exception of type 'System.NullReferenceException' occurred in B15_Ex05.exe 
+        //Additional information: Object reference not set to an instance of an object.
         // recieves a point to work with and returns list of directions
         private List<int[]> chooseMoveForPC(int[] i_point, int i_playerIdetifier)
         {
@@ -276,14 +251,16 @@ namespace B15_Ex05
                     }
                 }
             }
+
             return pointsToReturn;
         }
 
+        // @TODO - support endgame event
         private void endGame()
         {
             int playerOnePoints = 0,
                 playerTwoPoints = 0;
-            bool winner = false;//true = player one
+            bool winner = false; //true = player one
 
             for (int i = 0; i < m_gameMatrix.Length; i++)
             {

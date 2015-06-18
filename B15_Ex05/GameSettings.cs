@@ -9,11 +9,6 @@ namespace B15_Ex05
 
     class GameSettings : Form
     {
-        // Define Delegate to raise events
-        //public event EventHandler BoardSizeEventHandler BoardSizeChosen;
-
-        public event EventHandler GameOptionChoiceEventHandler;
-
         Button m_ButtonBoardSize = new Button();
         Button m_ButtonAgainstComputer = new Button();
         Button m_ButtonAgainstPlayer = new Button();
@@ -32,19 +27,6 @@ namespace B15_Ex05
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Othello - Game Settings";          
         }
-
-
-        //publish which game mode the user chose.
-        internal virtual void OnGameOptionChoiceEventHandler()
-        {
-            if (GameOptionChoiceEventHandler != null)
-            {
-                GameOptionChoiceEventHandler(this, EventArgs.Empty);
-            }
-        }
-
-
-
 
         /// <summary>
         /// This method will be called once, just before the first time the form is displayed
@@ -80,36 +62,13 @@ namespace B15_Ex05
 
         }
 
-        //protected virtual void OnBoardSizeChosen()
-        //{
-        //    if (BoardSizeChosen != null)
-        //    {
-        //        BoardSizeChosen(this, EventArgs.Empty);
-        //    }
-        //} 
-
         private void m_ButtonAgainstComputer_Click(object sender, EventArgs e)
         {
-        //    GameController gc = new GameController(false);
-           
-        //    //TODD - call the graphic board
-        //    GraphicsBoard board = new GraphicsBoard(m_BoardSizeIndex, false);
-            
-            //not need it because the graphic does that
-            //ViewModel gameFlow = new ViewModel(this.m_BoardSizeIndex, false);
-            //gameFlow.runGame();
-
             GraphicsBoard gameBoard = new GraphicsBoard(this.m_BoardSizeIndex, false);
-            //this.OnGameOptionChoiceEventHandler += gameFlow.OnGameOptionChoiceEventHandler;
-            //board.UserClickedButtonEventHandler += gc.OnUserClickedButtonEventHandler;
-
-            //board.ShowDialog();
-
         }
 
         private void m_ButtonAgainstPlayer_Click(object sender, EventArgs e)
         {
-            //ViewModel gameflow = new ViewModel(this.m_BoardSizeIndex, true); // ALREADY IN GAMEBOARD
             GraphicsBoard gameBoard = new GraphicsBoard(this.m_BoardSizeIndex,true);
         }
 
@@ -139,23 +98,14 @@ namespace B15_Ex05
             }
             
         }
-
+   
+        // GameSettings
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            // 
-            // GameSettings
-            // 
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Name = "GameSettings";
-            this.Load += new System.EventHandler(this.GameSettings_Load);
             this.ResumeLayout(false);
-
-        }
-
-        private void GameSettings_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

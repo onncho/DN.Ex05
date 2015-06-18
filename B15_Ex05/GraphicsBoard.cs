@@ -109,15 +109,15 @@ namespace B15_Ex05
 
             // @TODO: check the logic when pc plays all the graphics are mass out
 
-            //if (m_ViewModel.m_FirstPlayerTurn && m_Multiplayer)
-            //{
-            //    m_playerMoves = m_ViewModel.getPlayerMoves();
-            //    updatePlayerAvailableMoves(m_playerMoves);
-            //}
-            //else if (m_ViewModel.m_FirstPlayerTurn && !m_Multiplayer)
-            //{
-            //    gameControler.pcMove();
-            //}
+            if (m_Multiplayer)
+            {
+                m_playerMoves = m_ViewModel.getPlayerMoves();
+                updatePlayerAvailableMoves(m_playerMoves);
+            }
+            else if (!m_Multiplayer && !m_ViewModel.m_FirstPlayerTurn)
+            {
+                gameControler.pcMove();
+            }
         }
 
         private void printTitleToForm()
